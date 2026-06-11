@@ -36,6 +36,9 @@
     <video class="hero-video" autoplay muted playsinline preload="auto" data-hero-clip>
       <source src="assets/video/Hero2.mp4" type="video/mp4">
     </video>
+    <video class="hero-video" autoplay muted playsinline preload="auto" data-hero-clip>
+      <source src="assets/video/Hero3.mp4" type="video/mp4">
+    </video>
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">Your<br>Logistics<br><span class="accent">Partners</span></h1>
@@ -284,28 +287,37 @@
   </div>
 
   <script>
-    /* Hero chain: randomly pick which clip plays first, then alternate forever.
-       Both clips designed to chain in either order = seamless loop. */
+    /* Hero chain: shuffle the clips into a random order on load, then play
+       them back-to-back in that order forever. Clips are designed to chain
+       in any order = seamless loop. */
     (function () {
       const videos = Array.from(document.querySelectorAll('.hero-video[data-hero-clip]'));
       if (videos.length < 2) return;
 
-      const swap = Math.random() < 0.5;
-      const order = swap ? [videos[1], videos[0]] : [videos[0], videos[1]];
+      // Fisher-Yates shuffle
+      const order = videos.slice();
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+
       let idx = 0;
 
-      videos.forEach(v => v.classList.remove('is-active'));
+      // Init: reset all, then start the first in the shuffled order
+      videos.forEach(v => {
+        v.classList.remove('is-active');
+        v.pause();
+        v.currentTime = 0;
+      });
       order[0].classList.add('is-active');
-      order[0].currentTime = 0;
       order[0].play().catch(() => {});
-      order[1].pause();
-      order[1].currentTime = 0;
 
+      // On any clip's ended, advance to the next in the chain
       videos.forEach(v => {
         v.addEventListener('ended', () => {
-          idx = (idx + 1) % 2;
+          const prev = order[idx];
+          idx = (idx + 1) % order.length;
           const next = order[idx];
-          const prev = order[(idx + 1) % 2];
           next.classList.add('is-active');
           prev.classList.remove('is-active');
           prev.pause();
