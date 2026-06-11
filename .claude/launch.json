@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "static",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/chriscobb/Desktop/Select Website/.claude/server.js"],
+      "port": 8000
+    }
+  ],
+  "autoVerify": false
+}

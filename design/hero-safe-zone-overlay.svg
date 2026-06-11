@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .lbl  { font-family: Arial, Helvetica, sans-serif; font-weight: 700; fill: #ffffff; stroke: #000000; stroke-width: 4; paint-order: stroke; }
+      .pct  { font-family: Arial, Helvetica, sans-serif; font-weight: 700; fill: #ffffff; stroke: #000000; stroke-width: 4; paint-order: stroke; }
+      .title{ font-family: Arial, Helvetica, sans-serif; font-weight: 800; fill: #ffffff; stroke: #000000; stroke-width: 5; paint-order: stroke; }
+      .bound{ stroke: #ffffff; stroke-width: 2; stroke-dasharray: 14 10; opacity: 0.9; }
+      .cross{ stroke: #ffffff; stroke-width: 2; stroke-dasharray: 6 10; opacity: 0.4; }
+    </style>
+  </defs>
+
+  <!-- ===== Vertical visibility zones (centered) ===== -->
+  <!-- Likely cropped on most screens (outside the laptop band) -->
+  <rect x="0" y="0"   width="1920" height="178" fill="#ff3b30" opacity="0.30"/>
+  <rect x="0" y="902" width="1920" height="178" fill="#ff3b30" opacity="0.30"/>
+
+  <!-- Visible on laptops (~67%) -->
+  <rect x="0" y="178" width="1920" height="124" fill="#ff9500" opacity="0.22"/>
+  <rect x="0" y="778" width="1920" height="124" fill="#ff9500" opacity="0.22"/>
+
+  <!-- Visible on standard desktops (~44%) -->
+  <rect x="0" y="302" width="1920" height="119" fill="#ffd60a" opacity="0.16"/>
+  <rect x="0" y="659" width="1920" height="119" fill="#ffd60a" opacity="0.16"/>
+
+  <!-- Always safe, including 4K (~22%) -->
+  <rect x="0" y="421" width="1920" height="238" fill="#34c759" opacity="0.16"/>
+
+  <!-- ===== Text / headline area (left ~35% is covered by the scrim) ===== -->
+  <rect x="0" y="0" width="672" height="1080" fill="#1E1D57" opacity="0.34"/>
+  <line x1="672" y1="0" x2="672" y2="1080" stroke="#74D5E2" stroke-width="4" stroke-dasharray="18 12"/>
+  <text class="lbl" x="336" y="540" font-size="30" text-anchor="middle"
+        transform="rotate(-90 336 540)">TEXT / HEADLINE AREA &#8212; keep subjects to the right &#8594;</text>
+
+  <!-- ===== Boundary lines ===== -->
+  <line class="bound" x1="0" y1="178" x2="1920" y2="178"/>
+  <line class="bound" x1="0" y1="302" x2="1920" y2="302"/>
+  <line class="bound" x1="0" y1="421" x2="1920" y2="421"/>
+  <line class="bound" x1="0" y1="659" x2="1920" y2="659"/>
+  <line class="bound" x1="0" y1="778" x2="1920" y2="778"/>
+  <line class="bound" x1="0" y1="902" x2="1920" y2="902"/>
+
+  <!-- ===== Center crosshair ===== -->
+  <line class="cross" x1="960" y1="0" x2="960" y2="1080"/>
+  <line class="cross" x1="672" y1="540" x2="1920" y2="540"/>
+
+  <!-- ===== Labels (placed in the right, footage-visible area) ===== -->
+  <text class="title" x="1296" y="40" font-size="30" text-anchor="middle">HERO SAFE-ZONE GUIDE &#8212; 16:9 (1920&#215;1080)</text>
+  <text class="lbl" x="1296" y="120" font-size="26" text-anchor="middle">&#9650; Usually CROPPED &#9650;</text>
+  <text class="lbl" x="1296" y="990" font-size="26" text-anchor="middle">&#9660; Usually CROPPED &#9660;</text>
+
+  <text class="lbl" x="1296" y="252" font-size="24" text-anchor="middle">Seen on laptops only (~67%)</text>
+  <text class="lbl" x="1296" y="852" font-size="24" text-anchor="middle">Seen on laptops only (~67%)</text>
+
+  <text class="lbl" x="1296" y="375" font-size="24" text-anchor="middle">Standard desktops (~44%)</text>
+  <text class="lbl" x="1296" y="730" font-size="24" text-anchor="middle">Standard desktops (~44%)</text>
+
+  <text class="lbl" x="1296" y="535" font-size="30" text-anchor="middle">&#10003; SAFEST &#8212; visible on ALL screens incl. 4K</text>
+  <text class="lbl" x="1296" y="575" font-size="24" text-anchor="middle">Put faces / key action here</text>
+
+  <!-- ===== Right-edge visible-height percentages ===== -->
+  <text class="pct" x="1890" y="170" font-size="22" text-anchor="end">67%</text>
+  <text class="pct" x="1890" y="416" font-size="22" text-anchor="end">44%</text>
+  <text class="pct" x="1890" y="654" font-size="22" text-anchor="end">22%</text>
+
+  <!-- ===== Frame border ===== -->
+  <rect x="1" y="1" width="1918" height="1078" fill="none" stroke="#ffffff" stroke-width="2"/>
+</svg>

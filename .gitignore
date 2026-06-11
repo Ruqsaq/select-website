@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Adobe Premiere working files (not part of the website)
+*.prproj
+*.prin
+Adobe Premiere Pro Auto-Save/
