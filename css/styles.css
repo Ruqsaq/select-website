@@ -335,7 +335,23 @@ body {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 2rem;
-  align-items: end;
+  align-items: start;
+}
+
+.solutions-block {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.solutions-image {
+  width: clamp(320px, 44vw, 560px);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  border: 3px solid var(--navy);
 }
 
 .pillars-header .pillars-meta {
@@ -411,7 +427,6 @@ body {
 }
 
 .pillar-link {
-  font-family: var(--mono);
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -541,6 +556,10 @@ body {
 }
 
 .metrics-video:hover::after {
+  background: var(--cyan);
+}
+
+.metrics-video--cyan-arrow::after {
   background: var(--cyan);
 }
 
@@ -719,6 +738,52 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .affiliations-track { animation: none; }
+}
+
+.services-marquee {
+  margin-top: 2rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+.services-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: services-scroll 40s linear infinite;
+}
+
+.services-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  margin-right: 2rem;
+  flex-shrink: 0;
+}
+
+.services-image {
+  display: block;
+  width: 200px;
+  height: auto;
+}
+
+.services-label {
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  text-align: center;
+}
+
+@keyframes services-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-track { animation: none; }
 }
 
 /* ----- (legacy) Platform preview ----- */
@@ -1050,7 +1115,6 @@ body {
 }
 
 .contact-field > span {
-  font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
