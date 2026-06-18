@@ -1,5 +1,24 @@
 /* ===== Select Transport Partners — shared styles ===== */
 
+/* Self-hosted fonts (variable, latin subset) — preloaded in each page <head>.
+   Local hosting keeps the font ready before first paint, so text/buttons no
+   longer shift as a webfont loads. */
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/jost-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('../assets/fonts/jetbrainsmono-latin.woff2') format('woff2');
+}
+
 :root {
   --navy: #1E1D57;
   --navy-hero: #15143D;
@@ -17,6 +36,12 @@
 
 * {
   box-sizing: border-box;
+}
+
+/* Always reserve the scrollbar gutter so the centered layout and any vw-based
+   sizes don't shift when the scrollbar appears/disappears between pages. */
+html {
+  scrollbar-gutter: stable;
 }
 
 html, body {
@@ -121,6 +146,7 @@ body {
   display: inline-block;
   padding: 0.8rem 1.8rem;
   border-radius: 0;
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -824,6 +850,127 @@ img.team-headshot {
 
 .video-modal-close:hover { background: var(--cyan); color: var(--navy); }
 
+/* ===== Get a Quote modal ===== */
+.quote-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.quote-modal[hidden] { display: none; }
+
+.quote-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 14, 46, 0.78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.quote-modal-dialog {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  background: var(--navy);
+  border: 3px solid var(--cyan);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  padding: 2rem 2.25rem 2.5rem;
+}
+
+.quote-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  color: #fff;
+  border: 2px solid var(--cyan);
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.quote-modal-close:hover { background: var(--cyan); color: var(--navy); }
+
+.quote-modal-title {
+  width: fit-content;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 2.5rem;
+  border-bottom: 2px solid #D30986;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+
+.quote-modal-lede {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.quote-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.quote-success {
+  display: none;
+  padding: 1.5rem 0 0.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.quote-success-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+/* Timed Learn More modal: gentle fade + rise on open (less jarring than a hard pop) */
+#learnModal:not([hidden]) .quote-modal-backdrop {
+  animation: learn-modal-fade 0.6s ease both;
+}
+
+#learnModal:not([hidden]) .quote-modal-dialog {
+  animation: learn-modal-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes learn-modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes learn-modal-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #learnModal:not([hidden]) .quote-modal-backdrop,
+  #learnModal:not([hidden]) .quote-modal-dialog {
+    animation: none;
+  }
+}
+
 .metrics-title {
   margin: 0 0 1rem;
   font-size: clamp(2rem, 3.6vw, 3rem);
@@ -986,6 +1133,21 @@ img.team-headshot {
 
 @media (prefers-reduced-motion: reduce) {
   .services-track { animation: none; }
+}
+
+/* Integrations logo marquee — reuses .services-marquee / .services-track.
+   Logos sized by height so they line up uniformly regardless of logo width. */
+.int-item {
+  display: flex;
+  align-items: center;
+  margin-right: 4rem;
+  flex-shrink: 0;
+}
+
+.int-logo {
+  display: block;
+  height: 128px;
+  width: auto;
 }
 
 /* ----- (legacy) Platform preview ----- */
@@ -1324,7 +1486,8 @@ img.team-headshot {
 }
 
 .contact-field input,
-.contact-field textarea {
+.contact-field textarea,
+.contact-field select {
   width: 100%;
   padding: 0.7rem 0.85rem;
   background: rgba(15, 14, 46, 0.65);
@@ -1333,6 +1496,7 @@ img.team-headshot {
   color: var(--white);
   font: inherit;
   font-size: 0.95rem;
+  color-scheme: dark;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
@@ -1343,7 +1507,8 @@ img.team-headshot {
 }
 
 .contact-field input:focus,
-.contact-field textarea:focus {
+.contact-field textarea:focus,
+.contact-field select:focus {
   outline: none;
   border-color: var(--cyan);
   background: rgba(15, 14, 46, 0.85);

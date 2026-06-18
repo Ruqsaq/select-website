@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Select Transport Partners</title>
   <link rel="icon" type="image/png" href="assets/images/tab_logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jetbrainsmono-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <style>
     /* Tech page: remove the diagonal scrim so the animation shows on a clean background */
@@ -29,7 +28,7 @@
           <li><a href="customers.html">Customers</a></li>
           <li><a href="carriers.html">Carriers</a></li>
           <li><a href="agents.html">Agents</a></li>
-          <li><a href="tech.html">Tech</a></li>
+          <li><a href="tech.html" class="active">Tech</a></li>
           <li><a href="about.html">About Us</a></li>
         </ul>
       </nav>
@@ -115,8 +114,15 @@
       <h2 class="affiliations-title">Integrations</h2>
       <div class="services-marquee">
         <div class="services-track">
-          <!-- Integration provider cards go here. For each provider, add one visible
-               card and one aria-hidden duplicate so the marquee loops seamlessly. -->
+          <!-- Visible set -->
+          <div class="int-item"><img class="int-logo" src="assets/images/int_eleven.png" alt="Eleven"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_highway.png" alt="Highway"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_dat.png" alt="DAT"></div>
+
+          <!-- Duplicate set (aria-hidden) so the marquee loops seamlessly -->
+          <div class="int-item" aria-hidden="true"><img class="int-logo" src="assets/images/int_eleven.png" alt=""></div>
+          <div class="int-item" aria-hidden="true"><img class="int-logo" src="assets/images/int_highway.png" alt=""></div>
+          <div class="int-item" aria-hidden="true"><img class="int-logo" src="assets/images/int_dat.png" alt=""></div>
         </div>
       </div>
     </div>
@@ -191,6 +197,43 @@
       <video class="video-modal-player" controls playsinline preload="metadata">
         <source src="assets/video/Tech.mp4" type="video/mp4">
       </video>
+    </div>
+  </div>
+
+  <!-- ================== LEARN MORE MODAL (timed) ================== -->
+  <div class="quote-modal" id="learnModal" role="dialog" aria-modal="true" aria-labelledby="learnModalTitle" hidden>
+    <div class="quote-modal-backdrop" data-learn-close></div>
+    <div class="quote-modal-dialog">
+      <button class="quote-modal-close" type="button" aria-label="Close" data-learn-close>&times;</button>
+      <h2 class="quote-modal-title" id="learnModalTitle">Interested in Learning More?</h2>
+      <p class="quote-modal-lede">Interested in learning how Select can help you grow your business?</p>
+
+      <form class="quote-form" data-learn-form>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Name</span>
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label class="contact-field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+        </div>
+        <label class="contact-field">
+          <span>Phone</span>
+          <input type="tel" name="phone" autocomplete="tel" required>
+        </label>
+        <label class="contact-field">
+          <span>Message</span>
+          <textarea name="message" rows="4"></textarea>
+        </label>
+        <button type="submit" class="contact-submit">Submit</button>
+      </form>
+
+      <div class="quote-success" data-learn-success>
+        <div class="quote-success-title">Thanks &mdash; we&rsquo;ll be in touch.</div>
+        <p>Our team will reach out soon to share how Select can help you grow.</p>
+      </div>
     </div>
   </div>
 
@@ -290,6 +333,49 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.hidden) closeModal();
       });
+    })();
+
+    /* Learn More modal (timed) */
+    (function () {
+      const modal = document.getElementById('learnModal');
+      if (!modal) return;
+      const DELAY_MS = 20000; // show after 20s on the page
+      const STORAGE_KEY = 'selectLearnMoreShown';
+      const form = modal.querySelector('[data-learn-form]');
+      const success = modal.querySelector('[data-learn-success]');
+
+      function openModal() {
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+
+      modal.querySelectorAll('[data-learn-close]').forEach(el => el.addEventListener('click', closeModal));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        /* TODO: POST to HubSpot Forms API. For now, show a confirmation. */
+        form.style.display = 'none';
+        success.style.display = 'block';
+      });
+
+      // Auto-open once per visitor after a delay, unless another modal is already open.
+      // Persisted in localStorage so it won't pop again on future visits.
+      let shown = false;
+      try { shown = localStorage.getItem(STORAGE_KEY) === '1'; } catch (e) {}
+      if (!shown) {
+        setTimeout(() => {
+          if (document.querySelector('.quote-modal:not([hidden])')) return; // don't stack on an open modal
+          openModal();
+          try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+        }, DELAY_MS);
+      }
     })();
   </script>
 </body>

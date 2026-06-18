@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Select Transport Partners</title>
   <link rel="icon" type="image/png" href="assets/images/tab_logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jetbrainsmono-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -48,8 +47,8 @@
           place to build their book of business.
         </p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="customers.html">Get a Quote</a>
-          <a class="btn btn-secondary" href="agents.html">Become an Agent</a>
+          <button class="btn btn-primary" type="button" data-quote-trigger>Get a Quote</button>
+          <button class="btn btn-secondary" type="button" data-agent-trigger>Become an Agent</button>
         </div>
       </div>
     </div>
@@ -286,6 +285,140 @@
     </div>
   </div>
 
+  <!-- ================== GET A QUOTE MODAL ================== -->
+  <div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle" hidden>
+    <div class="quote-modal-backdrop" data-quote-close></div>
+    <div class="quote-modal-dialog">
+      <button class="quote-modal-close" type="button" aria-label="Close" data-quote-close>&times;</button>
+      <h2 class="quote-modal-title" id="quoteModalTitle">Get a Quote</h2>
+      <p class="quote-modal-lede">Tell us about your shipment and our team will follow up with a competitive rate.</p>
+
+      <form class="quote-form" data-quote-form>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Name</span>
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label class="contact-field">
+            <span>Company</span>
+            <input type="text" name="company" autocomplete="organization">
+          </label>
+        </div>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label class="contact-field">
+            <span>Phone</span>
+            <input type="tel" name="phone" autocomplete="tel" required>
+          </label>
+        </div>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Origin</span>
+            <input type="text" name="origin" placeholder="City, State or ZIP" required>
+          </label>
+          <label class="contact-field">
+            <span>Destination</span>
+            <input type="text" name="destination" placeholder="City, State or ZIP" required>
+          </label>
+        </div>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Equipment Type</span>
+            <select name="equipment">
+              <option value="" disabled selected>Select equipment</option>
+              <option>Dry Van</option>
+              <option>Reefer</option>
+              <option>Flatbed</option>
+              <option>Step Deck</option>
+              <option>Power Only</option>
+              <option>Partial / LTL</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label class="contact-field">
+            <span>Pickup Date</span>
+            <input type="date" name="pickup_date">
+          </label>
+        </div>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Commodity</span>
+            <input type="text" name="commodity">
+          </label>
+          <label class="contact-field">
+            <span>Weight (lbs)</span>
+            <input type="text" name="weight" inputmode="numeric">
+          </label>
+        </div>
+        <label class="contact-field">
+          <span>Notes</span>
+          <textarea name="message" rows="4"></textarea>
+        </label>
+        <button type="submit" class="contact-submit">Request Quote</button>
+      </form>
+
+      <div class="quote-success" data-quote-success>
+        <div class="quote-success-title">Thanks &mdash; we&rsquo;ve got it.</div>
+        <p>Our team will review your shipment details and reach out with a quote shortly.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== BECOME AN AGENT MODAL ================== -->
+  <div class="quote-modal" id="agentModal" role="dialog" aria-modal="true" aria-labelledby="agentModalTitle" hidden>
+    <div class="quote-modal-backdrop" data-agent-close></div>
+    <div class="quote-modal-dialog">
+      <button class="quote-modal-close" type="button" aria-label="Close" data-agent-close>&times;</button>
+      <h2 class="quote-modal-title" id="agentModalTitle">Become an Agent</h2>
+      <p class="quote-modal-lede">Tell us about yourself and our team will reach out to talk through the Select agent program.</p>
+
+      <form class="quote-form" data-agent-form>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Name</span>
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label class="contact-field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+        </div>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>Phone</span>
+            <input type="tel" name="phone" autocomplete="tel" required>
+          </label>
+          <label class="contact-field">
+            <span>Current Role</span>
+            <select name="current_role">
+              <option value="" disabled selected>Select role</option>
+              <option>Agent</option>
+              <option>Employee</option>
+              <option>Brokerage Owner</option>
+            </select>
+          </label>
+        </div>
+        <label class="contact-field">
+          <span>Average Monthly Margin</span>
+          <input type="text" name="avg_monthly_margin" placeholder="e.g. $25,000" inputmode="numeric">
+        </label>
+        <label class="contact-field">
+          <span>Message</span>
+          <textarea name="message" rows="4"></textarea>
+        </label>
+        <button type="submit" class="contact-submit">Submit Application</button>
+      </form>
+
+      <div class="quote-success" data-agent-success>
+        <div class="quote-success-title">Thanks &mdash; application received.</div>
+        <p>Our team will review your information and reach out soon to talk next steps.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* Hero chain: shuffle the clips into a random order on load, then play
        them back-to-back in that order forever. Clips are designed to chain
@@ -356,6 +489,68 @@
       modal.querySelectorAll('[data-modal-close]').forEach(el => el.addEventListener('click', closeModal));
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+    })();
+
+    /* Get a Quote modal */
+    (function () {
+      const modal = document.getElementById('quoteModal');
+      if (!modal) return;
+      const triggers = document.querySelectorAll('[data-quote-trigger]');
+      const form = modal.querySelector('[data-quote-form]');
+      const success = modal.querySelector('[data-quote-success]');
+
+      function openModal() {
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+
+      triggers.forEach(t => t.addEventListener('click', openModal));
+      modal.querySelectorAll('[data-quote-close]').forEach(el => el.addEventListener('click', closeModal));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        /* TODO: POST to HubSpot Forms API. For now, show a confirmation. */
+        form.style.display = 'none';
+        success.style.display = 'block';
+      });
+    })();
+
+    /* Become an Agent modal */
+    (function () {
+      const modal = document.getElementById('agentModal');
+      if (!modal) return;
+      const triggers = document.querySelectorAll('[data-agent-trigger]');
+      const form = modal.querySelector('[data-agent-form]');
+      const success = modal.querySelector('[data-agent-success]');
+
+      function openModal() {
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+
+      triggers.forEach(t => t.addEventListener('click', openModal));
+      modal.querySelectorAll('[data-agent-close]').forEach(el => el.addEventListener('click', closeModal));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        /* TODO: POST to HubSpot Forms API. For now, show a confirmation. */
+        form.style.display = 'none';
+        success.style.display = 'block';
       });
     })();
   </script>
