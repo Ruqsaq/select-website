@@ -1137,17 +1137,24 @@ img.team-headshot {
 
 /* Integrations logo marquee — reuses .services-marquee / .services-track.
    Logos sized by height so they line up uniformly regardless of logo width. */
+/* Each logo sits in a uniform box and scales to fit (preserving aspect ratio),
+   so mixed wordmarks/icons read as evenly sized and evenly spaced. */
 .int-item {
   display: flex;
   align-items: center;
-  margin-right: 4rem;
+  justify-content: center;
+  width: 220px;
+  height: 110px;
+  margin-right: 2.5rem;
   flex-shrink: 0;
 }
 
 .int-logo {
   display: block;
-  height: 128px;
+  max-width: 100%;
+  max-height: 100%;
   width: auto;
+  height: auto;
 }
 
 /* ----- (legacy) Platform preview ----- */

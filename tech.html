@@ -113,16 +113,26 @@
     <div class="container">
       <h2 class="affiliations-title">Integrations</h2>
       <div class="services-marquee">
-        <div class="services-track">
-          <!-- Visible set -->
+        <!-- One item per integration. JS shuffles these on load, then clones the
+             set so the marquee scrolls seamlessly (CSS animation translates -50%). -->
+        <div class="services-track" data-marquee-track>
           <div class="int-item"><img class="int-logo" src="assets/images/int_eleven.png" alt="Eleven"></div>
           <div class="int-item"><img class="int-logo" src="assets/images/int_highway.png" alt="Highway"></div>
           <div class="int-item"><img class="int-logo" src="assets/images/int_dat.png" alt="DAT"></div>
-
-          <!-- Duplicate set (aria-hidden) so the marquee loops seamlessly -->
-          <div class="int-item" aria-hidden="true"><img class="int-logo" src="assets/images/int_eleven.png" alt=""></div>
-          <div class="int-item" aria-hidden="true"><img class="int-logo" src="assets/images/int_highway.png" alt=""></div>
-          <div class="int-item" aria-hidden="true"><img class="int-logo" src="assets/images/int_dat.png" alt=""></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_twillio.png" alt="Twilio"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_mm.png" alt="Mile Maker"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_metabase.png" alt="Metabase"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_macro.png" alt="MacroPoint"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_UberFreight.png" alt="Uber Freight"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_cass.png" alt="Cass"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_e2.png" alt="E2 Open"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_fourkites.png" alt="FourKites"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_kleinschmidt.png" alt="Kleinschmidt"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_mcp.png" alt="MyCarrierPackets"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_penske.png" alt="Penske"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_saferwatch.png" alt="SaferWatch"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_truckstop.png" alt="Truckstop"></div>
+          <div class="int-item"><img class="int-logo" src="assets/images/int_pallet.png" alt="Pallet"></div>
         </div>
       </div>
     </div>
@@ -376,6 +386,33 @@
           try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
         }, DELAY_MS);
       }
+    })();
+
+    /* Integrations marquee: shuffle the logos on load, then clone the set so the
+       track has two identical halves (the CSS animation translates -50%). */
+    (function () {
+      const track = document.querySelector('[data-marquee-track]');
+      if (!track) return;
+      const items = Array.from(track.children);
+      if (items.length < 2) return;
+
+      // Fisher-Yates shuffle
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+
+      track.innerHTML = '';
+      items.forEach(el => track.appendChild(el));
+
+      // Append aria-hidden clones (empty alt) to form the seamless second half.
+      items.forEach(el => {
+        const clone = el.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        const img = clone.querySelector('img');
+        if (img) img.alt = '';
+        track.appendChild(clone);
+      });
     })();
   </script>
 </body>
