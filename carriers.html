@@ -29,14 +29,8 @@
   </header>
 
   <section class="hero">
-    <video class="hero-video is-active" autoplay muted playsinline preload="auto" data-hero-clip>
-      <source src="assets/video/Hero1.mp4" type="video/mp4">
-    </video>
-    <video class="hero-video" autoplay muted playsinline preload="auto" data-hero-clip>
-      <source src="assets/video/Hero2.mp4" type="video/mp4">
-    </video>
-    <video class="hero-video" autoplay muted playsinline preload="auto" data-hero-clip>
-      <source src="assets/video/Hero3.mp4" type="video/mp4">
+    <video class="hero-video is-active" autoplay muted loop playsinline preload="auto">
+      <source src="assets/video/carrier_hero.mp4" type="video/mp4">
     </video>
     <div class="container">
       <div class="hero-content">
@@ -65,14 +59,16 @@
             Join the Select network, and gain access to hundreds of daily loads all over the nation for all types of equipment. Real-time customer service (via phone, email, or text) seven days a week means you get the help you need fast.
           </p>
         </div>
-        <img class="metrics-video" src="assets/images/Carrier1.png" alt="Select carrier network">
+        <img class="metrics-video is-active" src="assets/images/Carrier1.png" alt="Select carrier network" data-network-image>
+        <img class="metrics-video" src="assets/images/Carrier1b.png" alt="Select carrier network" data-network-image>
       </div>
 
       <div class="pillar-grid">
       </div>
 
       <div class="solutions-block">
-        <img class="solutions-image" src="assets/images/Carrier2.png" alt="Haul for Select">
+        <img class="solutions-image is-active" src="assets/images/Carrier2.png" alt="Haul for Select" data-haul-image>
+        <img class="solutions-image" src="assets/images/Carrier2b.png" alt="Haul for Select" data-haul-image>
         <div>
           <h2 class="section-headline">Haul for Select</h2>
           <p class="section-lede" style="font-weight: 600;">Carrier Requirements:</p>
@@ -104,7 +100,8 @@
             Check Payment Status <span class="arrow"></span>
           </a>
         </div>
-        <img class="payments-image" src="assets/images/Carrier3.png" alt="Reliable on-time payments">
+        <img class="payments-image is-active" src="assets/images/Carrier3.png" alt="Reliable on-time payments" data-payments-image>
+        <img class="payments-image" src="assets/images/Carrier3b.png" alt="Reliable on-time payments" data-payments-image>
       </div>
     </div>
   </section>
@@ -182,6 +179,18 @@
   </div>
 
   <script>
+    /* Random image swap: for each marker attribute, pick one of the matching
+       images at random on page load. */
+    (function () {
+      ['data-payments-image', 'data-network-image', 'data-haul-image'].forEach(attr => {
+        const images = Array.from(document.querySelectorAll('[' + attr + ']'));
+        if (images.length < 2) return;
+        const pick = Math.floor(Math.random() * images.length);
+        images.forEach(img => img.classList.remove('is-active'));
+        images[pick].classList.add('is-active');
+      });
+    })();
+
     /* Hero chain: shuffle the clips into a random order on load, then play
        them back-to-back in that order forever. Clips are designed to chain
        in any order = seamless loop. */
