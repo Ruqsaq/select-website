@@ -9,6 +9,31 @@
   <link rel="preload" href="assets/fonts/jetbrainsmono-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/nav.js" defer></script>
+  <style>
+    /* Agents page mobile/tablet tweaks */
+    @media (max-width: 860px) {
+      .pillars-header {
+        grid-template-columns: 1fr !important;
+      }
+      .pillars-header > .section-headline {
+        order: 1;
+        text-align: center;
+        margin: 0 auto;
+        width: fit-content;
+      }
+      .pillars-header > button {
+        order: 2;
+        grid-row: auto !important;
+      }
+      .pillars-header > .section-lede {
+        order: 3;
+      }
+      /* Stack the 3-pillar feature row to a single column on mobile */
+      .pillar-grid[style*="repeat(3"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -51,19 +76,17 @@
     <div class="container">
 
       <div class="pillars-header" style="grid-template-columns: auto 1fr;">
-        <button class="metrics-video metrics-video--cyan-arrow" type="button" aria-label="Play Select Transport Partners brand film" data-video-trigger style="border-color: var(--cyan);">
+        <button class="metrics-video metrics-video--cyan-arrow" type="button" aria-label="Play Select Transport Partners brand film" data-video-trigger style="border-color: var(--cyan); grid-row: span 2;">
           <video autoplay muted loop playsinline preload="auto">
             <source src="assets/video/Agents_vid.mp4" type="video/mp4">
           </video>
         </button>
-        <div>
-          <h2 class="section-headline">
-            Built For Agents
-          </h2>
-          <p class="section-lede">
-            Meet a group of Select agents and hear firsthand why they choose to partner with us. From industry-leading pay to cutting-edge technology and unmatched support, find out what makes Select the right choice for top-performing freight agents.
-          </p>
-        </div>
+        <h2 class="section-headline">
+          Built For Agents
+        </h2>
+        <p class="section-lede">
+          Meet a group of Select agents and hear firsthand why they choose to partner with us. From industry-leading pay to cutting-edge technology and unmatched support, find out what makes Select the right choice for top-performing freight agents.
+        </p>
       </div>
 
       <div class="pillar-grid">
