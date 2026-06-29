@@ -25,6 +25,15 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      // Honeypot: real users never fill this hidden field; bots usually do.
+      // If it's populated, silently pretend everything succeeded so the bot
+      // does not learn the form is protected.
+      const honeypot = form.querySelector('.honeypot');
+      if (honeypot && honeypot.value) {
+        showSuccess(form);
+        return;
+      }
+
       // Native required-field validation
       if (!form.checkValidity()) {
         form.reportValidity();

@@ -1626,6 +1626,17 @@ img.team-headshot {
   background: rgba(255, 107, 138, 0.08);
 }
 
+/* Honeypot field for spam protection — visible to bots, hidden from humans.
+   Off-screen positioning (not display:none) so bots that skip hidden fields still see it. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ----- 5. Footer ----- */
 .footer {
   background: var(--navy);
