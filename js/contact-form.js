@@ -52,6 +52,26 @@
       }
     },
     {
+      // "Interested in Learning More?" timed popup on agents.html and tech.html
+      // Uses the same HubSpot form as the main Contact Us form so leads land
+      // in the same place.
+      selector: 'form.quote-form[data-learn-form]',
+      formGuid: '05c49ac9-fe54-4c68-9740-651a57d0bb86',
+      fieldMap: {
+        name: 'firstname',
+        phone: 'phone',
+        email: 'email',
+        message: 'message'
+      },
+      onSuccess: (form) => {
+        const success =
+          (form.parentElement && form.parentElement.querySelector('[data-learn-success]')) ||
+          document.querySelector('[data-learn-success]');
+        form.style.display = 'none';
+        if (success) success.style.display = 'block';
+      }
+    },
+    {
       // "Become an Agent" modal form
       selector: 'form.quote-form[data-agent-form]',
       formGuid: 'ee30ca01-7b6c-4b91-a72f-f2f277dbd643',
