@@ -1,102 +1,138 @@
-/* Contact form -> HubSpot Forms API.
-   Intercepts the "How can we help?" form submission on every page,
-   POSTs the field values to the HubSpot Forms v3 endpoint, and shows
-   a thank-you message in place of the form on success. */
+/* HubSpot form bridge.
+   Intercepts our HTML forms and POSTs the field values to the
+   HubSpot Forms v3 endpoint. Each form type has its own config
+   (selector, HubSpot form GUID, field name map, success handler).
+   Honeypot field is checked first; bot-filled submissions are
+   silently confirmed without ever hitting HubSpot. */
 (function () {
   const PORTAL_ID = '46846982';
-  const FORM_GUID = '05c49ac9-fe54-4c68-9740-651a57d0bb86';
 
-  // Map our HTML input "name" attribute -> HubSpot field internal name.
-  // If a submission fails because HubSpot can't find a field, this is
-  // the place to adjust the mapping.
-  const FIELD_MAP = {
-    name: 'firstname',
-    phone: 'phone',
-    email: 'email',
-    message: 'message'
-  };
-
-  const ENDPOINT = 'https://api.hsforms.com/submissions/v3/integration/submit/' + PORTAL_ID + '/' + FORM_GUID;
-
-  document.querySelectorAll('form.contact-form').forEach(form => {
-    const submitBtn = form.querySelector('[type="submit"]');
-    const originalLabel = submitBtn ? submitBtn.textContent : 'Submit';
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Honeypot: real users never fill this hidden field; bots usually do.
-      // If it's populated, silently pretend everything succeeded so the bot
-      // does not learn the form is protected.
-      const honeypot = form.querySelector('.honeypot');
-      if (honeypot && honeypot.value) {
-        showSuccess(form);
-        return;
+  const FORMS = [
+    {
+      // "How can we help?" contact form on every page (in the CTA band)
+      selector: 'form.contact-form',
+      formGuid: '05c49ac9-fe54-4c68-9740-651a57d0bb86',
+      fieldMap: {
+        name: 'firstname',
+        phone: 'phone',
+        email: 'email',
+        message: 'message'
+      },
+      onSuccess: (form) => {
+        form.innerHTML =
+          '<div class="contact-form-success">' +
+          '<h3>Thank you!</h3>' +
+          '<p>We have received your message and will be in touch shortly.</p>' +
+          '</div>';
       }
-
-      // Native required-field validation
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
+    },
+    {
+      // "Get a Quote" modal form
+      selector: 'form.quote-form[data-quote-form]',
+      formGuid: 'ce9e9c8d-c9d0-4d0f-8e06-5e529feef3c9',
+      fieldMap: {
+        name: 'firstname',
+        company: 'company',
+        email: 'email',
+        phone: 'phone',
+        origin: 'origin',
+        destination: 'destination',
+        equipment: 'equipment',
+        pickup_date: 'pickup_date',
+        commodity: 'commodity',
+        weight: 'weight_lbs',
+        message: 'message'
+      },
+      onSuccess: (form) => {
+        const success =
+          (form.parentElement && form.parentElement.querySelector('[data-quote-success]')) ||
+          document.querySelector('[data-quote-success]');
+        form.style.display = 'none';
+        if (success) success.style.display = 'block';
       }
+    }
+  ];
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-      }
-      clearError(form);
+  FORMS.forEach(wire);
 
-      const fields = [];
-      Object.entries(FIELD_MAP).forEach(([htmlName, hsName]) => {
-        const input = form.querySelector('[name="' + htmlName + '"]');
-        if (input && input.value.trim()) {
-          fields.push({ name: hsName, value: input.value.trim() });
+  function wire(config) {
+    const endpoint = 'https://api.hsforms.com/submissions/v3/integration/submit/' + PORTAL_ID + '/' + config.formGuid;
+
+    document.querySelectorAll(config.selector).forEach(form => {
+      const submitBtn = form.querySelector('[type="submit"]');
+      const originalLabel = submitBtn ? submitBtn.textContent : 'Submit';
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Honeypot: real users never fill this hidden field; bots usually do.
+        // Silently show success so the bot does not learn the form is protected.
+        const honeypot = form.querySelector('.honeypot');
+        if (honeypot && honeypot.value) {
+          config.onSuccess(form);
+          return;
         }
-      });
 
-      const payload = {
-        fields: fields,
-        context: {
-          pageUri: window.location.href,
-          pageName: document.title
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
         }
-      };
 
-      try {
-        const response = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending...';
+        }
+        clearError(form);
+
+        const fields = [];
+        Object.entries(config.fieldMap).forEach(([htmlName, hsName]) => {
+          const input = form.querySelector('[name="' + htmlName + '"]');
+          if (!input || !input.value || !String(input.value).trim()) return;
+          let value = String(input.value).trim();
+          // HubSpot date fields expect midnight UTC milliseconds
+          if (input.type === 'date') {
+            const parsed = new Date(value + 'T00:00:00Z').getTime();
+            if (!isNaN(parsed)) value = parsed;
+          }
+          fields.push({ name: hsName, value: value });
         });
 
-        if (response.ok) {
-          showSuccess(form);
-        } else {
+        const payload = {
+          fields: fields,
+          context: {
+            pageUri: window.location.href,
+            pageName: document.title
+          }
+        };
+
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            config.onSuccess(form);
+          } else {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = originalLabel;
+            }
+            const detail = await response.text().catch(() => '');
+            console.error('HubSpot submission failed:', response.status, detail);
+            showError(form, 'Something went wrong sending your message. Please try again, or email us at HQ@goselect.com.');
+          }
+        } catch (err) {
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = originalLabel;
           }
-          const detail = await response.text().catch(() => '');
-          console.error('HubSpot submission failed:', response.status, detail);
-          showError(form, 'Something went wrong sending your message. Please try again, or email us at HQ@goselect.com.');
+          console.error('HubSpot submission error:', err);
+          showError(form, 'Could not reach our server. Please try again, or email us at HQ@goselect.com.');
         }
-      } catch (err) {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalLabel;
-        }
-        console.error('HubSpot submission error:', err);
-        showError(form, 'Could not reach our server. Please try again, or email us at HQ@goselect.com.');
-      }
+      });
     });
-  });
-
-  function showSuccess(form) {
-    form.innerHTML =
-      '<div class="contact-form-success">' +
-      '<h3>Thank you!</h3>' +
-      '<p>We have received your message and will be in touch shortly.</p>' +
-      '</div>';
   }
 
   function showError(form, message) {
