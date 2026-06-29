@@ -1593,6 +1593,39 @@ img.team-headshot {
   color: var(--navy);
 }
 
+.contact-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.contact-form-success {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.contact-form-success h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.contact-form-success p {
+  margin: 0;
+  color: var(--white);
+  line-height: 1.5;
+}
+
+.contact-form-error {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #ff6b8a;
+  color: #ffc8d2;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  background: rgba(255, 107, 138, 0.08);
+}
+
 /* ----- 5. Footer ----- */
 .footer {
   background: var(--navy);
