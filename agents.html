@@ -256,6 +256,7 @@
       <p class="quote-modal-lede">Tell us about yourself and our team will reach out to talk through the Select agent program.</p>
 
       <form class="quote-form" data-agent-form>
+        <input class="honeypot" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="contact-row">
           <label class="contact-field">
             <span>Name</span>
@@ -457,12 +458,6 @@
         if (e.key === 'Escape' && !modal.hidden) closeModal();
       });
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        /* TODO: POST to HubSpot Forms API. For now, show a confirmation. */
-        form.style.display = 'none';
-        success.style.display = 'block';
-      });
     })();
 
     /* Learn More modal (timed) */

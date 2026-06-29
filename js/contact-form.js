@@ -50,6 +50,26 @@
         form.style.display = 'none';
         if (success) success.style.display = 'block';
       }
+    },
+    {
+      // "Become an Agent" modal form
+      selector: 'form.quote-form[data-agent-form]',
+      formGuid: 'ee30ca01-7b6c-4b91-a72f-f2f277dbd643',
+      fieldMap: {
+        name: 'firstname',
+        email: 'email',
+        phone: 'mobilephone',
+        current_role: 'role',
+        avg_monthly_margin: 'margin',
+        message: 'message'
+      },
+      onSuccess: (form) => {
+        const success =
+          (form.parentElement && form.parentElement.querySelector('[data-agent-success]')) ||
+          document.querySelector('[data-agent-success]');
+        form.style.display = 'none';
+        if (success) success.style.display = 'block';
+      }
     }
   ];
 
